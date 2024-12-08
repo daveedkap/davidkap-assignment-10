@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search for Images</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Search for Relevant Images</h1>
+    <form
+        action="{{ url_for('home') }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+      <label for="text-query">Optional Text Query:</label>
+      <input id="text-query" type="text" name="text_query" />
+
+      <label for="image-query">Optional Image Query:</label>
+      <input id="image-query" type="file" name="image_query" accept="image/*" />
+
+      <label for="weight">Weight for Text/Image (0.0 - 1.0):</label>
+      <input id="weight" type="text" name="lam" />
+
+      <label for="pca-k">Top k PCA Components (leave blank for default):</label>
+      <input id="pca-k" type="text" name="pca_k" />
+
+      <button type="submit">Start Search</button>
+    </form>
+
+    {% if results %}
+    <h2>Search Results</h2>
+    <ul>
+      {% for r in results %}
+      <li>
+        <p><strong>File Name:</strong> {{ r.file_name }}</p>
+        <p><strong>Similarity Score:</strong> {{ r.similarity }}</p>
+        <img
+          src="{{ url_for('static', filename='coco_images_resized/' + r.file_name) }}"
+          alt="Preview of {{ r.file_name }}"
+          class="result-image"
+        />
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
